@@ -45,7 +45,7 @@ public abstract class MixinDebugHud {
         }
     }
 
-    @Redirect(method = "drawLeftText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;drawText(Lnet/minecraft/client/gui/DrawContext;Ljava/util/List;Z)V"))
+    @Redirect(method = "drawGameInformation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;drawText(Lnet/minecraft/client/gui/DrawContext;Ljava/util/List;Z)V"))
     public void sodiumExtra$redirectDrawLeftText(DebugHud instance, DrawContext context, List<String> text, boolean left) {
         if (this.rebuild) {
             this.leftTextCache.clear();
@@ -54,7 +54,7 @@ public abstract class MixinDebugHud {
         this.drawText(context, this.leftTextCache, left);
     }
 
-    @Redirect(method = "drawRightText", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;drawText(Lnet/minecraft/client/gui/DrawContext;Ljava/util/List;Z)V"))
+    @Redirect(method = "drawSystemInformation", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/DebugHud;drawText(Lnet/minecraft/client/gui/DrawContext;Ljava/util/List;Z)V"))
     public void sodiumExtra$redirectDrawRightText(DebugHud instance, DrawContext context, List<String> text, boolean left) {
         if (this.rebuild) {
             this.rightTextCache.clear();

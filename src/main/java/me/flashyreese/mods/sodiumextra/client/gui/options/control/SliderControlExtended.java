@@ -1,14 +1,14 @@
 package me.flashyreese.mods.sodiumextra.client.gui.options.control;
 
-import me.jellysquid.mods.sodium.client.gui.options.Option;
-import me.jellysquid.mods.sodium.client.gui.options.control.Control;
-import me.jellysquid.mods.sodium.client.gui.options.control.ControlElement;
-import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatter;
-import me.jellysquid.mods.sodium.client.util.Dim2i;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.Validate;
+import org.embeddedt.embeddium.api.math.Dim2i;
+import org.embeddedt.embeddium.api.options.control.Control;
+import org.embeddedt.embeddium.api.options.control.ControlElement;
+import org.embeddedt.embeddium.api.options.control.ControlValueFormatter;
+import org.embeddedt.embeddium.api.options.structure.Option;
 
 public class SliderControlExtended implements Control<Integer> {
     private final Option<Integer> option;

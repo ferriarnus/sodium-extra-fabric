@@ -1,9 +1,9 @@
 package me.flashyreese.mods.sodiumextra.common.util;
 
-import me.jellysquid.mods.sodium.client.gui.options.control.ControlValueFormatter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Monitor;
 import net.minecraft.text.Text;
+import org.embeddedt.embeddium.api.options.control.ControlValueFormatter;
 
 public interface ControlValueFormatterExtended extends ControlValueFormatter {
     static ControlValueFormatter resolution() {

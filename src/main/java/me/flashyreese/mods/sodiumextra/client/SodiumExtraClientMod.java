@@ -3,18 +3,24 @@ package me.flashyreese.mods.sodiumextra.client;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraGameOptions;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraHud;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Environment(EnvType.CLIENT)
-public class SodiumExtraClientMod implements ClientModInitializer {
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = SodiumExtraClientMod.MODID, value = Dist.CLIENT)
+@Mod(SodiumExtraClientMod.MODID)
+public class SodiumExtraClientMod {
 
+    public static final String MODID = "embeddiumextra";
     private static final ClientTickHandler clientTickHandler = new ClientTickHandler();
     private static SodiumExtraGameOptions CONFIG;
     private static CaffeineConfig MIXIN_CONFIG;
@@ -77,7 +83,7 @@ public class SodiumExtraClientMod implements ClientModInitializer {
 
                     //.withLogger(SodiumExtraClientMod.logger())
                     .withInfoUrl("https://github.com/FlashyReese/sodium-extra-fabric/wiki/Configuration-File")
-                    .build(FabricLoader.getInstance().getConfigDir().resolve("sodium-extra.properties"));
+                    .build(FMLPaths.CONFIGDIR.get().resolve("sodium-extra.properties"));
         }
         return MIXIN_CONFIG;
     }
@@ -87,14 +93,17 @@ public class SodiumExtraClientMod implements ClientModInitializer {
     }
 
     private static SodiumExtraGameOptions loadConfig() {
-        return SodiumExtraGameOptions.load(FabricLoader.getInstance().getConfigDir().resolve("sodium-extra-options.json").toFile());
+        return SodiumExtraGameOptions.load(FMLPaths.CONFIGDIR.get().resolve("sodium-extra-options.json").toFile());
     }
 
-    @Override
-    public void onInitializeClient() {
-        getClientTickHandler().onClientInitialize();
+    //@SubscribeEvent
+    public static void clientTick(ClientTickEvent.Pre event) {
+        //sodiumExtraHud.onStartTick();
+    }
+
+    @SubscribeEvent
+    public static void overlay(RegisterGuiLayersEvent event) {
         SodiumExtraHud sodiumExtraHud = new SodiumExtraHud();
-        HudRenderCallback.EVENT.register(sodiumExtraHud);
-        ClientTickEvents.START_CLIENT_TICK.register(sodiumExtraHud);
+        event.registerAboveAll(Identifier.of(MODID, "extra_hud"), sodiumExtraHud);
     }
 }

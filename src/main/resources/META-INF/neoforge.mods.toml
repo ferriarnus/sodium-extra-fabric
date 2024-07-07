@@ -1,0 +1,38 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="LGPL-3.0"
+
+[[mods]]
+modId="embeddiumextra"
+version="${version}"
+displayName="Embeddium extra"
+displayTest = "IGNORE_SERVER_VERSION"
+#logoFile="assets/nvidium/nvidium.png"
+authors="FlashyReese, Ferri_Arnus"
+description='''
+Features that shouldn't be in Sodium.
+'''
+
+[[dependencies.embeddiumextra]]
+modId = "neoforge"
+type="required"
+versionRange = "[21.0.0-beta,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.embeddiumextra]]
+modId = "minecraft"
+type="required"
+versionRange = "[1.21,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.embeddiumextra]]
+modId="embeddium"
+type="required"
+versionRange="[1.0.5-git-f5eb29c+mc1.21]"
+ordering="NONE"
+side="CLIENT"
+
+[[mixins]]
+config = "sodium-extra.mixins.json"

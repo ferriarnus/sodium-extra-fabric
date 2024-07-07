@@ -3,24 +3,22 @@ package me.flashyreese.mods.sodiumextra.client.gui;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.mixin.gui.MinecraftClientAccessor;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.LayeredDrawer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
-public class SodiumExtraHud implements HudRenderCallback, ClientTickEvents.StartTick {
+public class SodiumExtraHud implements LayeredDrawer.Layer {
 
     private final List<Text> textList = new ObjectArrayList<>();
 
     private final MinecraftClient client = MinecraftClient.getInstance();
 
-    @Override
-    public void onStartTick(MinecraftClient client) {
+    public void onStartTick() {
         // Clear the textList to start fresh (this might not be ideal but hey it's still better than whatever the fuck debug hud is doing)
         this.textList.clear();
         if (SodiumExtraClientMod.options().extraSettings.showFps) {
@@ -49,8 +47,9 @@ public class SodiumExtraHud implements HudRenderCallback, ClientTickEvents.Start
     }
 
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter renderTickCounter) {
+    public void render(DrawContext context, RenderTickCounter tickCounter) {
         if (!this.client.getDebugHud().shouldShowDebugHud() && !this.client.options.hudHidden) {
+            //onStartTick();
             SodiumExtraGameOptions.OverlayCorner overlayCorner = SodiumExtraClientMod.options().extraSettings.overlayCorner;
             // Calculate starting position based on the overlay corner
             int x;
@@ -63,7 +62,7 @@ public class SodiumExtraHud implements HudRenderCallback, ClientTickEvents.Start
                 } else {
                     x = 2;
                 }
-                this.drawString(drawContext, text, x, y);
+                this.drawString(context, text, x, y);
                 if (overlayCorner == SodiumExtraGameOptions.OverlayCorner.BOTTOM_LEFT || overlayCorner == SodiumExtraGameOptions.OverlayCorner.BOTTOM_RIGHT) {
                     y -= client.textRenderer.fontHeight + 2;
                 } else {
