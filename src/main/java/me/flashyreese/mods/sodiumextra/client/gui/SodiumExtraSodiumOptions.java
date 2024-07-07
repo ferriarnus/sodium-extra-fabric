@@ -145,9 +145,7 @@ public class SodiumExtraSodiumOptions {
             int i = -1;
             for (var option: event.getOptions()) {
                 if (option.getId().matches(StandardOptions.Option.VSYNC)) {
-                    if (option.getTooltip().getString().equals(Text.translatable("sodium.options.v_sync.tooltip").getString())) {
-                        i = event.getOptions().indexOf(option);
-                    }
+                    i = event.getOptions().indexOf(option);
                 }
             }
 

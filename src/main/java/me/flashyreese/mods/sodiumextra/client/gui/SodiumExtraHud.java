@@ -9,18 +9,28 @@ import net.minecraft.client.gui.LayeredDrawer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 import java.util.List;
 
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class SodiumExtraHud implements LayeredDrawer.Layer {
 
-    private final List<Text> textList = new ObjectArrayList<>();
+    public static SodiumExtraHud INSTANCE = new SodiumExtraHud();
 
-    private final MinecraftClient client = MinecraftClient.getInstance();
+    private static final List<Text> textList = new ObjectArrayList<>();
 
-    public void onStartTick() {
+    private static final MinecraftClient client = MinecraftClient.getInstance();
+
+    private SodiumExtraHud() {}
+
+    @SubscribeEvent
+    public static void onStartTick(ClientTickEvent.Pre event) {
         // Clear the textList to start fresh (this might not be ideal but hey it's still better than whatever the fuck debug hud is doing)
-        this.textList.clear();
+        textList.clear();
         if (SodiumExtraClientMod.options().extraSettings.showFps) {
             int currentFPS = MinecraftClientAccessor.getCurrentFPS();
 
@@ -30,35 +40,34 @@ public class SodiumExtraHud implements LayeredDrawer.Layer {
                 text = Text.literal(String.format("%s %s", text.getString(), Text.translatable("sodium-extra.overlay.fps_extended", SodiumExtraClientMod.getClientTickHandler().getHighestFps(), SodiumExtraClientMod.getClientTickHandler().getAverageFps(),
                         SodiumExtraClientMod.getClientTickHandler().getLowestFps()).getString()));
 
-            this.textList.add(text);
+            textList.add(text);
         }
 
-        if (SodiumExtraClientMod.options().extraSettings.showCoords && !this.client.hasReducedDebugInfo() && this.client.player != null) {
-            Vec3d pos = this.client.player.getPos();
+        if (SodiumExtraClientMod.options().extraSettings.showCoords && !client.hasReducedDebugInfo() && client.player != null) {
+            Vec3d pos = client.player.getPos();
 
             Text text = Text.translatable("sodium-extra.overlay.coordinates", String.format("%.2f", pos.x), String.format("%.2f", pos.y), String.format("%.2f", pos.z));
-            this.textList.add(text);
+            textList.add(text);
         }
 
         if (!SodiumExtraClientMod.options().renderSettings.lightUpdates) {
             Text text = Text.translatable("sodium-extra.overlay.light_updates");
-            this.textList.add(text);
+            textList.add(text);
         }
     }
 
     @Override
     public void render(DrawContext context, RenderTickCounter tickCounter) {
-        if (!this.client.getDebugHud().shouldShowDebugHud() && !this.client.options.hudHidden) {
-            //onStartTick();
+        if (!client.getDebugHud().shouldShowDebugHud() && !client.options.hudHidden) {
             SodiumExtraGameOptions.OverlayCorner overlayCorner = SodiumExtraClientMod.options().extraSettings.overlayCorner;
             // Calculate starting position based on the overlay corner
             int x;
             int y = overlayCorner == SodiumExtraGameOptions.OverlayCorner.BOTTOM_LEFT || overlayCorner == SodiumExtraGameOptions.OverlayCorner.BOTTOM_RIGHT ?
-                    this.client.getWindow().getScaledHeight() - this.client.textRenderer.fontHeight - 2 : 2;
+                    client.getWindow().getScaledHeight() - client.textRenderer.fontHeight - 2 : 2;
             // Render each text in the list
-            for (Text text : this.textList) {
+            for (Text text : textList) {
                 if (overlayCorner == SodiumExtraGameOptions.OverlayCorner.TOP_RIGHT || overlayCorner == SodiumExtraGameOptions.OverlayCorner.BOTTOM_RIGHT) {
-                    x = this.client.getWindow().getScaledWidth() - this.client.textRenderer.getWidth(text) - 2;
+                    x = client.getWindow().getScaledWidth() - client.textRenderer.getWidth(text) - 2;
                 } else {
                     x = 2;
                 }
@@ -76,9 +85,9 @@ public class SodiumExtraHud implements LayeredDrawer.Layer {
         int textColor = 0xffffffff; // Default text color
 
         if (SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.BACKGROUND) {
-            drawContext.fill(x - 1, y - 1, x + this.client.textRenderer.getWidth(text) + 1, y + this.client.textRenderer.fontHeight + 1, -1873784752);
+            drawContext.fill(x - 1, y - 1, x + client.textRenderer.getWidth(text) + 1, y + client.textRenderer.fontHeight + 1, -1873784752);
         }
 
-        drawContext.drawText(this.client.textRenderer, text, x, y, textColor, SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.SHADOW);
+        drawContext.drawText(client.textRenderer, text, x, y, textColor, SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.SHADOW);
     }
 }

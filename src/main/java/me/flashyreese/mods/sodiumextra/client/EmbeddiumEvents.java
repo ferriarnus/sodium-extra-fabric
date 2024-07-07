@@ -1,6 +1,5 @@
-package me.flashyreese.mods.sodiumextra;
+package me.flashyreese.mods.sodiumextra.client;
 
-import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

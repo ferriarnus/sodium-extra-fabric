@@ -96,14 +96,8 @@ public class SodiumExtraClientMod {
         return SodiumExtraGameOptions.load(FMLPaths.CONFIGDIR.get().resolve("sodium-extra-options.json").toFile());
     }
 
-    //@SubscribeEvent
-    public static void clientTick(ClientTickEvent.Pre event) {
-        //sodiumExtraHud.onStartTick();
-    }
-
     @SubscribeEvent
     public static void overlay(RegisterGuiLayersEvent event) {
-        SodiumExtraHud sodiumExtraHud = new SodiumExtraHud();
-        event.registerAboveAll(Identifier.of(MODID, "extra_hud"), sodiumExtraHud);
+        event.registerAboveAll(Identifier.of(MODID, "extra_hud"), SodiumExtraHud.INSTANCE);
     }
 }
